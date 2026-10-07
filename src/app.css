@@ -325,14 +325,54 @@ fieldset {
   font-weight: 900;
 }
 
-.cell.occupied.red {
+.chip {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  border-radius: 50%;
+  box-shadow: inset 0 -0.2rem 0 rgba(0, 0, 0, 0.15);
+}
+
+.cell.red .chip {
   color: #ffffff;
   background: #d92d20;
 }
 
-.cell.occupied.yellow {
+.cell.yellow .chip {
   color: #3b2c00;
   background: #f9d423;
+}
+
+.chip.falling {
+  animation: chip-fall 560ms both;
+}
+
+@keyframes chip-fall {
+  0% {
+    transform: translateY(calc(var(--fall-rows) * -112%));
+    animation-timing-function: cubic-bezier(0.2, 0.75, 0.35, 1);
+  }
+
+  72% {
+    transform: translateY(0);
+  }
+
+  84% {
+    transform: translateY(-9%);
+  }
+
+  92% {
+    transform: translateY(0);
+  }
+
+  96% {
+    transform: translateY(-3%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .game-actions {
@@ -374,5 +414,9 @@ fieldset {
   *::after {
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .chip.falling {
+    animation: none;
   }
 }

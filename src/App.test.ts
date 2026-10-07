@@ -44,6 +44,39 @@ describe('App', () => {
     ).toBeTruthy();
   });
 
+  it('marks each newly placed chip with its row-aware fall distance', async () => {
+    const session = createGameSession();
+    render(App, { props: { session } });
+
+    session.startTwoPlayer();
+    session.playColumn(0);
+    await tick();
+
+    const redCell = screen.getByRole('gridcell', {
+      name: 'Row 6, column 1: Red disc',
+    });
+    const redChip = redCell.querySelector('.chip');
+
+    expect(redChip?.classList.contains('falling')).toBe(true);
+    expect((redChip as HTMLElement).style.getPropertyValue('--fall-rows')).toBe(
+      '6',
+    );
+
+    session.playColumn(0);
+    await tick();
+
+    const yellowCell = screen.getByRole('gridcell', {
+      name: 'Row 5, column 1: Yellow disc',
+    });
+    const yellowChip = yellowCell.querySelector('.chip');
+
+    expect(redChip?.classList.contains('falling')).toBe(false);
+    expect(yellowChip?.classList.contains('falling')).toBe(true);
+    expect(
+      (yellowChip as HTMLElement).style.getPropertyValue('--fall-rows'),
+    ).toBe('5');
+  });
+
   it('shows thinking state and blocks controls while the computer opens', async () => {
     const callbacks: Array<() => void> = [];
     const scheduleComputerTurn: ComputerTurnScheduler = (callback) => {
