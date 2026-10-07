@@ -1,5 +1,12 @@
+.git
+.gitignore
+.dockerignore
+Dockerfile*
+compose*.yaml
+README.md
 node_modules
 dist
-.git
 .svelte-kit
 coverage
+*.tsbuildinfo
+npm-debug.log*
