@@ -20,17 +20,8 @@
   let selectedMode: GameMode = 'one-player';
   let selectedColour: Player = PLAYERS.RED;
   let sessionState: GameSessionState;
-  let previousBoard: Cell[][] | null = null;
-  let fallingChip: { row: number; column: number } | null = null;
 
   const unsubscribe = session.subscribe((state) => {
-    if (previousBoard !== state.game.board) {
-      fallingChip = previousBoard
-        ? findPlacedChip(previousBoard, state.game.board)
-        : null;
-      previousBoard = state.game.board;
-    }
-
     sessionState = state;
   });
 
@@ -82,21 +73,6 @@
 
   function cellLabel(cell: Cell): string {
     return cell === null ? 'Empty' : `${playerName(cell)} disc`;
-  }
-
-  function findPlacedChip(
-    previous: Cell[][],
-    current: Cell[][],
-  ): { row: number; column: number } | null {
-    for (let row = 0; row < current.length; row += 1) {
-      for (let column = 0; column < current[row].length; column += 1) {
-        if (previous[row][column] === null && current[row][column] !== null) {
-          return { row, column };
-        }
-      }
-    }
-
-    return null;
   }
 
   function columnDisabled(
@@ -246,9 +222,7 @@
                   >
                     {#if cell !== null}
                       <span
-                        class:falling={fallingChip?.row === rowIndex &&
-                          fallingChip?.column === columnIndex}
-                        class="chip"
+                        class="chip falling"
                         style:--fall-rows={rowIndex + 1}
                         aria-hidden="true"
                       >

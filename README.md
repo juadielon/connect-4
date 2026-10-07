@@ -60,7 +60,7 @@ docker compose down
 Run the test suite in the dedicated `test` service:
 
 ```sh
-docker compose run --rm test
+docker compose run --build --rm test
 ```
 
 ## Technology

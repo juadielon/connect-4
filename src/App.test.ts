@@ -45,7 +45,7 @@ describe('App', () => {
     ).toBeTruthy();
   });
 
-  it('marks each newly placed chip with its row-aware fall distance', async () => {
+  it('keeps independent row-aware animation hooks on consecutive chips', async () => {
     const session = createGameSession();
     render(App, { props: { session } });
 
@@ -71,7 +71,7 @@ describe('App', () => {
     });
     const yellowChip = yellowCell.querySelector('.chip');
 
-    expect(redChip?.classList.contains('falling')).toBe(false);
+    expect(redChip?.classList.contains('falling')).toBe(true);
     expect(yellowChip?.classList.contains('falling')).toBe(true);
     expect(
       (yellowChip as HTMLElement).style.getPropertyValue('--fall-rows'),
