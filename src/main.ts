@@ -1,11 +1,8 @@
 import { mount } from 'svelte';
 import App from './App.svelte';
 import './app.css';
+import { initialiseApp } from './bootstrap';
 
-const target = document.getElementById('app');
-
-if (!target) {
-  throw new Error('App target element was not found');
-}
-
-mount(App, { target });
+initialiseApp(document.getElementById('app'), (target) => {
+  mount(App, { target });
+});

@@ -30,7 +30,8 @@ describe('createGame', () => {
 
 describe('dropDisc', () => {
   it('drops discs into the lowest empty cell and alternates players', () => {
-    const first = dropDisc(createGame(), 3);
+    const initial = createGame();
+    const first = dropDisc(initial, 3);
     expect(first.accepted).toBe(true);
 
     if (!first.accepted) {
@@ -40,6 +41,7 @@ describe('dropDisc', () => {
     expect(first.row).toBe(5);
     expect(first.state.board[5][3]).toBe(PLAYERS.RED);
     expect(first.state.currentPlayer).toBe(PLAYERS.YELLOW);
+    expect(initial.board[5][3]).toBeNull();
 
     const second = dropDisc(first.state, 3);
     expect(second.accepted).toBe(true);
@@ -89,6 +91,13 @@ describe('dropDisc', () => {
 
     expect(game.status).toBe('won');
     expect(game.winner).toBe(PLAYERS.RED);
+  });
+
+  it('detects a win for yellow', () => {
+    const game = play([6, 0, 6, 1, 5, 2, 5, 3]);
+
+    expect(game.status).toBe('won');
+    expect(game.winner).toBe(PLAYERS.YELLOW);
   });
 
   it('detects a rising diagonal win', () => {
