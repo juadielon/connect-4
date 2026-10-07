@@ -30,6 +30,7 @@ describe('App', () => {
     expect(
       screen.getByRole('grid', { name: 'Connect Four board' }),
     ).toBeTruthy();
+    expect(screen.getAllByRole('row')).toHaveLength(6);
 
     const firstColumn = screen.getByRole('button', {
       name: 'Drop disc in column 1',

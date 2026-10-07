@@ -271,8 +271,7 @@ fieldset {
   margin: 0 auto;
 }
 
-.column-controls,
-.board {
+.column-controls {
   display: grid;
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
@@ -304,12 +303,19 @@ fieldset {
 }
 
 .board {
+  display: grid;
   gap: clamp(0.2rem, 1.2vw, 0.55rem);
   padding: clamp(0.5rem, 2vw, 0.85rem);
   background: #2355ae;
   border: clamp(0.25rem, 1vw, 0.45rem) solid #163d8c;
   border-radius: 1rem;
   box-shadow: inset 0 -0.5rem 0 rgba(0, 0, 0, 0.14);
+}
+
+.board-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(0.2rem, 1.2vw, 0.55rem);
 }
 
 .cell {

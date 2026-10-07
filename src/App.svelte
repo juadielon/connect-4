@@ -234,28 +234,30 @@
 
           <div class="board" role="grid" aria-label="Connect Four board">
             {#each sessionState.game.board as row, rowIndex}
-              {#each row as cell, columnIndex}
-                <div
-                  class:occupied={cell !== null}
-                  class:red={cell === PLAYERS.RED}
-                  class:yellow={cell === PLAYERS.YELLOW}
-                  class="cell"
-                  role="gridcell"
-                  aria-label={`Row ${rowIndex + 1}, column ${columnIndex + 1}: ${cellLabel(cell)}`}
-                >
-                  {#if cell !== null}
-                    <span
-                      class:falling={fallingChip?.row === rowIndex &&
-                        fallingChip?.column === columnIndex}
-                      class="chip"
-                      style:--fall-rows={rowIndex + 1}
-                      aria-hidden="true"
-                    >
-                      {cell === PLAYERS.RED ? 'R' : 'Y'}
-                    </span>
-                  {/if}
-                </div>
-              {/each}
+              <div class="board-row" role="row">
+                {#each row as cell, columnIndex}
+                  <div
+                    class:occupied={cell !== null}
+                    class:red={cell === PLAYERS.RED}
+                    class:yellow={cell === PLAYERS.YELLOW}
+                    class="cell"
+                    role="gridcell"
+                    aria-label={`Row ${rowIndex + 1}, column ${columnIndex + 1}: ${cellLabel(cell)}`}
+                  >
+                    {#if cell !== null}
+                      <span
+                        class:falling={fallingChip?.row === rowIndex &&
+                          fallingChip?.column === columnIndex}
+                        class="chip"
+                        style:--fall-rows={rowIndex + 1}
+                        aria-hidden="true"
+                      >
+                        {cell === PLAYERS.RED ? 'R' : 'Y'}
+                      </span>
+                    {/if}
+                  </div>
+                {/each}
+              </div>
             {/each}
           </div>
         </div>
