@@ -350,6 +350,15 @@ fieldset {
   background: #f9d423;
 }
 
+.cell.winning {
+  border-color: #ffffff;
+}
+
+.cell.winning .chip {
+  outline: clamp(0.12rem, 0.5vw, 0.25rem) dashed #0b1f4d;
+  outline-offset: clamp(-0.5rem, -1.2vw, -0.25rem);
+}
+
 .chip.falling {
   animation: chip-fall 560ms both;
 }

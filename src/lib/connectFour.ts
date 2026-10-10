@@ -11,12 +11,18 @@ export type Cell = Player | null;
 export type Board = Cell[][];
 export type GameStatus = 'playing' | 'won' | 'draw';
 
+export interface CellPosition {
+  row: number;
+  column: number;
+}
+
 export interface GameState {
   board: Board;
   currentPlayer: Player;
   status: GameStatus;
   winner: Player | null;
   moves: number;
+  winningCells: CellPosition[];
 }
 
 export type DropResult =
@@ -49,6 +55,7 @@ export function createGame(): GameState {
     status: 'playing',
     winner: null,
     moves: 0,
+    winningCells: [],
   };
 }
 
@@ -70,7 +77,8 @@ export function dropDisc(state: GameState, column: number): DropResult {
   const board = state.board.map((boardRow) => [...boardRow]);
   board[row][column] = state.currentPlayer;
   const moves = state.moves + 1;
-  const won = hasWinningLine(board, row, column, state.currentPlayer);
+  const winningCells = findWinningCells(board, row, column, state.currentPlayer);
+  const won = winningCells.length > 0;
   const draw = !won && moves === ROW_COUNT * COLUMN_COUNT;
 
   return {
@@ -84,6 +92,7 @@ export function dropDisc(state: GameState, column: number): DropResult {
       status: won ? 'won' : draw ? 'draw' : 'playing',
       winner: won ? state.currentPlayer : null,
       moves,
+      winningCells,
     },
   };
 }
@@ -98,20 +107,26 @@ function findLowestEmptyRow(board: Board, column: number): number {
   return -1;
 }
 
-function hasWinningLine(
+function findWinningCells(
   board: Board,
   row: number,
   column: number,
   player: Player,
-): boolean {
-  return DIRECTIONS.some(([rowStep, columnStep]) => {
-    const connected =
-      1 +
-      countDirection(board, row, column, rowStep, columnStep, player) +
-      countDirection(board, row, column, -rowStep, -columnStep, player);
+): CellPosition[] {
+  for (const [rowStep, columnStep] of DIRECTIONS) {
+    const forward = countDirection(board, row, column, rowStep, columnStep, player);
+    const backward = countDirection(board, row, column, -rowStep, -columnStep, player);
+    const connected = 1 + forward + backward;
 
-    return connected >= WIN_LENGTH;
-  });
+    if (connected >= WIN_LENGTH) {
+      return Array.from({ length: connected }, (_, index) => ({
+        row: row + (index - backward) * rowStep,
+        column: column + (index - backward) * columnStep,
+      }));
+    }
+  }
+
+  return [];
 }
 
 function countDirection(
