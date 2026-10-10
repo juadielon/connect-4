@@ -71,8 +71,15 @@
     return player === PLAYERS.RED ? 'Red' : 'Yellow';
   }
 
-  function cellLabel(cell: Cell): string {
-    return cell === null ? 'Empty' : `${playerName(cell)} disc`;
+  function isWinningCell(state: GameSessionState, row: number, column: number): boolean {
+    return state.game.winningCells.some(
+      (cell) => cell.row === row && cell.column === column,
+    );
+  }
+
+  function cellLabel(cell: Cell, winning: boolean): string {
+    const label = cell === null ? 'Empty' : `${playerName(cell)} disc`;
+    return winning ? `${label}, part of the winning line` : label;
   }
 
   function columnDisabled(
@@ -212,13 +219,15 @@
             {#each sessionState.game.board as row, rowIndex}
               <div class="board-row" role="row">
                 {#each row as cell, columnIndex}
+                  {@const winning = isWinningCell(sessionState, rowIndex, columnIndex)}
                   <div
                     class:occupied={cell !== null}
                     class:red={cell === PLAYERS.RED}
                     class:yellow={cell === PLAYERS.YELLOW}
+                    class:winning
                     class="cell"
                     role="gridcell"
-                    aria-label={`Row ${rowIndex + 1}, column ${columnIndex + 1}: ${cellLabel(cell)}`}
+                    aria-label={`Row ${rowIndex + 1}, column ${columnIndex + 1}: ${cellLabel(cell, winning)}`}
                   >
                     {#if cell !== null}
                       <span

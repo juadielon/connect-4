@@ -25,6 +25,7 @@ describe('createGame', () => {
     expect(game.board.flat().every((cell) => cell === null)).toBe(true);
     expect(game.currentPlayer).toBe(PLAYERS.RED);
     expect(game.status).toBe('playing');
+    expect(game.winningCells).toEqual([]);
   });
 });
 
@@ -41,6 +42,7 @@ describe('dropDisc', () => {
     expect(first.row).toBe(5);
     expect(first.state.board[5][3]).toBe(PLAYERS.RED);
     expect(first.state.currentPlayer).toBe(PLAYERS.YELLOW);
+    expect(first.state.winningCells).toEqual([]);
     expect(initial.board[5][3]).toBeNull();
 
     const second = dropDisc(first.state, 3);
@@ -84,6 +86,9 @@ describe('dropDisc', () => {
 
     expect(game.status).toBe('won');
     expect(game.winner).toBe(PLAYERS.RED);
+    expect(game.winningCells).toEqual(
+      [0, 1, 2, 3].map((column) => ({ row: 5, column })),
+    );
   });
 
   it('detects a vertical win', () => {
@@ -91,6 +96,9 @@ describe('dropDisc', () => {
 
     expect(game.status).toBe('won');
     expect(game.winner).toBe(PLAYERS.RED);
+    expect(game.winningCells).toEqual(
+      [2, 3, 4, 5].map((row) => ({ row, column: 0 })),
+    );
   });
 
   it('detects a win for yellow', () => {
@@ -98,6 +106,9 @@ describe('dropDisc', () => {
 
     expect(game.status).toBe('won');
     expect(game.winner).toBe(PLAYERS.YELLOW);
+    expect(game.winningCells).toEqual(
+      [0, 1, 2, 3].map((column) => ({ row: 5, column })),
+    );
   });
 
   it('detects a rising diagonal win', () => {
@@ -105,6 +116,12 @@ describe('dropDisc', () => {
 
     expect(game.status).toBe('won');
     expect(game.winner).toBe(PLAYERS.RED);
+    expect(game.winningCells).toEqual([
+      { row: 2, column: 3 },
+      { row: 3, column: 2 },
+      { row: 4, column: 1 },
+      { row: 5, column: 0 },
+    ]);
   });
 
   it('detects a falling diagonal win', () => {
@@ -112,6 +129,21 @@ describe('dropDisc', () => {
 
     expect(game.status).toBe('won');
     expect(game.winner).toBe(PLAYERS.RED);
+    expect(game.winningCells).toEqual([
+      { row: 2, column: 0 },
+      { row: 3, column: 1 },
+      { row: 4, column: 2 },
+      { row: 5, column: 3 },
+    ]);
+  });
+
+  it('includes the full connected line when a move fills a gap', () => {
+    const game = play([0, 0, 1, 1, 3, 3, 4, 4, 2]);
+
+    expect(game.status).toBe('won');
+    expect(game.winningCells).toEqual(
+      [0, 1, 2, 3, 4].map((column) => ({ row: 5, column })),
+    );
   });
 
   it('detects a draw when the final cell is filled without a winner', () => {
@@ -122,6 +154,7 @@ describe('dropDisc', () => {
 
     expect(game.status).toBe('draw');
     expect(game.winner).toBeNull();
+    expect(game.winningCells).toEqual([]);
     expect(game.moves).toBe(ROW_COUNT * COLUMN_COUNT);
   });
 

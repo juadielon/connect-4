@@ -8,6 +8,7 @@ browser, choose a mode, and take turns dropping counters into the board.
 - Play against the computer or another person.
 - Choose the human player's colour in one-player mode.
 - Clear turn, win, draw, and restart controls.
+- Winning counters have a visible outline and screen-reader labels in both modes.
 - Runs entirely through Docker Compose.
 
 ## Game modes
@@ -30,6 +31,11 @@ Connect 4 uses a board with seven columns and six rows.
 3. The first player to connect four counters horizontally, vertically, or
    diagonally wins.
 4. If the board fills before anyone connects four, the game is a draw.
+
+On a win, the whole connected line is highlighted, even if it is longer than
+four counters. If a move completes more than one line, the first line found
+(horizontal, vertical, then diagonal) is shown. New game and Change mode clear
+the highlight.
 
 ## Prerequisite
 
