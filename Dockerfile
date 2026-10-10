@@ -8,13 +8,12 @@ RUN npm ci
 FROM dependencies AS test
 
 COPY . .
-RUN npm run check && npm test
 
 CMD ["sh", "-c", "npm run check && npm test"]
 
 FROM test AS build
 
-RUN npm run build
+RUN npm run check && npm test && npm run build
 
 FROM nginx:1.27-alpine AS production
 
